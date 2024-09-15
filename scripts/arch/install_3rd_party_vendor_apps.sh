@@ -400,10 +400,10 @@ install_jetbrains_ide () {
   bin="${install_dir}/bin"
   desktop_shortcut="${HOME}/.local/share/applications/${ide}.desktop"
   [ -e "${desktop_shortcut}" ] && rm "${desktop_shortcut}"
-  echo -e "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=${name}\nType=Application\nCategories=Development;Programming\nTerminal=false\nStartupNotify=true\nComment=${desc}\nExec=\"${bin}/${ide}.sh\" %U\nIcon=${bin}/${ide}.png" > "${desktop_shortcut}"
+  echo -e "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=${name}\nType=Application\nCategories=Development;Programming\nTerminal=false\nStartupNotify=true\nComment=${desc}\nExec=\"${bin}/${ide}\" %U\nIcon=${bin}/${ide}.png" > "${desktop_shortcut}"
 
   # Setup symlink in /usr/local/bin
-  target="${bin}/${ide}.sh"
+  target="${bin}/${ide}"
   ln -sf "${target}" "${HOME}/.local/bin/${ide}"
 
   # Clean up
