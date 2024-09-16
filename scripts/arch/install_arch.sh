@@ -713,7 +713,7 @@ case "$board_vendor" in
 
     fi
 
-    if [[ "$board_name" = "MS-7C35" ]]; then
+    if [[ "$board_name" = "MEG X570 ACE (MS-7C35)" ]]; then
 
       # MSI MEG X570 ACE Motherboard Desktop
       pacman -S --noconfirm --noprogressbar \
