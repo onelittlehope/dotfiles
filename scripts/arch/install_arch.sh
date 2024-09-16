@@ -746,15 +746,6 @@ case "$board_vendor" in
         lib32-vulkan-mesa-layers \
         lib32-vulkan-swrast \
         lib32-vulkan-virtio \
-        mesa \
-        mesa-utils \
-        qemu-guest-agent \
-        spice-vdagent \
-        vulkan-icd-loader \
-        vulkan-mesa-layers \
-        vulkan-swrast \
-        vulkan-tools \
-        vulkan-virtio \
         libva-mesa-driver \
         libva-utils \
         libvdpau-va-gl \
@@ -762,11 +753,14 @@ case "$board_vendor" in
         mesa-utils \
         mesa-vdpau  \
         nvtop \
+        qemu-guest-agent \
+        spice-vdagent \
         vdpauinfo \
         vulkan-icd-loader \
         vulkan-mesa-layers \
+        vulkan-swrast \
         vulkan-tools \
-
+        vulkan-virtio
 
     ;;
 esac
