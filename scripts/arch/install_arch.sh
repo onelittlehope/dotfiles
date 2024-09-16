@@ -383,6 +383,10 @@ echo "#=========================================================================
 
 sed -i -e 's/^#en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i -e 's/^#en_GB ISO-8859-1/en_GB ISO-8859-1/g' /etc/locale.gen
+# The following is needed for steam runtime
+sed -i -e 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i -e 's/^#en_US ISO-8859-1/en_US ISO-8859-1/g' /etc/locale.gen
+
 
 locale-gen
 
@@ -669,24 +673,13 @@ case "$board_vendor" in
       cpupower \
       cups \
       cups-pdf \
-      libva-mesa-driver \
-      libva-utils \
-      libvdpau-va-gl \
       lm_sensors \
-      mesa \
-      mesa-utils \
-      mesa-vdpau  \
-      nvtop \
       pipewire \
       pipewire-alsa \
       pipewire-jack \
       pipewire-pulse \
       rtkit \
-      smartmontools \
-      vdpauinfo \
-      vulkan-icd-loader \
-      vulkan-mesa-layers \
-      vulkan-tools
+      smartmontools
 
     if [[ "$board_name" = "P95_96_97Ex,Rx" ]]; then
 
@@ -698,14 +691,25 @@ case "$board_vendor" in
         lib32-nvidia-utils \
         lib32-vulkan-intel \
         libva-intel-driver \
+        libva-mesa-driver \
         libva-nvidia-driver \
+        libva-utils \
+        libvdpau-va-gl \
+        mesa \
+        mesa-utils \
+        mesa-vdpau  \
         nvidia-open \
         nvidia-prime \
         nvidia-settings \
         nvidia-utils \
+        nvtop \
         powertop \
         tlp \
-        vulkan-intel
+        vdpauinfo \
+        vulkan-icd-loader \
+        vulkan-intel \
+        vulkan-mesa-layers \
+        vulkan-tools
 
     fi
 
@@ -715,8 +719,19 @@ case "$board_vendor" in
       pacman -S --noconfirm --noprogressbar \
         amd-ucode \
         lib32-vulkan-radeon \
+        libva-mesa-driver \
+        libva-utils \
+        libvdpau-va-gl \
+        mesa \
+        mesa-utils \
+        mesa-vdpau  \
+        nvtop \
         radeontop \
-        vulkan-radeon
+        vdpauinfo \
+        vulkan-icd-loader \
+        vulkan-mesa-layers \
+        vulkan-radeon \
+        vulkan-tools
 
     fi
 
@@ -739,7 +754,19 @@ case "$board_vendor" in
         vulkan-mesa-layers \
         vulkan-swrast \
         vulkan-tools \
-        vulkan-virtio
+        vulkan-virtio \
+        libva-mesa-driver \
+        libva-utils \
+        libvdpau-va-gl \
+        mesa \
+        mesa-utils \
+        mesa-vdpau  \
+        nvtop \
+        vdpauinfo \
+        vulkan-icd-loader \
+        vulkan-mesa-layers \
+        vulkan-tools \
+
 
     ;;
 esac
