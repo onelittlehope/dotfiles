@@ -433,6 +433,30 @@ install_kubeswitch () {
 
 
 #
+# shellcheck - Static analysis tool for shell scripts 
+# https://github.com/koalaman/shellcheck
+#
+install_shellcheck () {
+  mkdir -p "${HOME}/.local/bin"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
+  chmod og-rwx "${HOME}/.local/bin"
+  tmp_file="$(mktemp)"
+  tmp_dir="$(mktemp --directory)"
+  latest_ver=$(curl -sL "https://api.github.com/repos/koalaman/shellcheck/releases/latest" \
+    | grep '"tag_name":' \
+    | sed -E 's/.*"([^"]+)".*/\1/')
+
+  curl -sSL -o "${tmp_file}" "https://github.com/koalaman/shellcheck/releases/download/${latest_ver}/shellcheck-${latest_ver}.linux.x86_64.tar.xz"
+  tar -xJf "${tmp_file}" -C "${tmp_dir}"
+  [ -e "${HOME}/.local/bin/shellcheck" ] && rm "${HOME}/.local/bin/shellcheck"
+  mv "${tmp_dir}/shellcheck-${latest_ver}/shellcheck" "${HOME}/.local/bin/shellcheck"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin/shellcheck"
+  chmod 0700 "${HOME}/.local/bin/shellcheck"
+  rm -rf "${tmp_file}" "${tmp_dir}"
+}
+
+
+#
 # Install Slack
 #
 install_slack () {
@@ -644,6 +668,7 @@ CHOICES=$(whiptail \
           "RIDER" "JetBrains Rider (Latest version)" OFF \
           "RUBYMINE" "JetBrains RubyMine (Latest version)" OFF \
           "RUSTROVER" "JetBrains RustRover (Latest version)" ON \
+          "SHELLCHECK" "ShellCheck (Latest version)" ON \
           "SLACK" "Slack (Latest version)" ON \
           "SMARTGIT" "Syntevo SmartGit (v23.1.4)" ON \
           "SUBLIME_TEXT" "Sublime Text (Latest version)" ON \
@@ -728,6 +753,10 @@ else
     "RUSTROVER")
       echo "Installing RustRover"
       install_jetbrains_ide "RR"
+      ;;
+    "SHELLCHECK")
+      echo "Installing ShellCheck"
+      install_shellcheck
       ;;
     "SLACK")
       echo "Installing Slack"
