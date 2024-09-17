@@ -1419,6 +1419,7 @@ echo "#=========================================================================
 systemctl enable atop.service
 systemctl enable atopacct.service
 systemctl enable auditd.service
+systemctl enable bluetooth.service
 systemctl enable docker.socket
 systemctl enable libvirtd.socket
 systemctl enable NetworkManager.service
