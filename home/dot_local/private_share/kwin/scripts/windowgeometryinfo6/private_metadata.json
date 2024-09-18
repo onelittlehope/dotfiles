@@ -1,0 +1,22 @@
+{
+	"KPackageStructure": "KWin/Script",
+	"KPlugin": {
+		"Id": "windowgeometryinfo6",
+		"Version": "2.0.0",
+		"Name": "Window Geometry Information",
+		"Description": "An on-screen display showing window geometry",
+		"License": "GPL",
+		"Icon": "preferences-system-windows-move",
+		"Authors": [
+			{
+				"Name": "Richard Qian",
+				"Email": "richWiki101@gmail.com"
+			},
+			{
+				"Name": "SyiMyuZya",
+				"Email": "syimyuzya@gmail.com"
+			}
+		]
+	},
+	"X-Plasma-API": "declarativescript"
+}
