@@ -740,6 +740,15 @@ case "$board_vendor" in
     if [[ "$board_name" = "SAMSUNG_NP1234567890" ]]; then
 
       # Samsung Series 9 NP900X4C Laptop
+      # Note: When setting up wireless connection in NM, you need to set the
+      # wireless security to "WPA/WPA2 Personal". The default is "WPA3 
+      # Personal" which doesn't work and you will get a "nl80211: kernel
+      # reports: key setting validation failed" error.
+      # Relevant threads:
+      # - https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/issues/964
+      # - https://groups.google.com/g/linux.debian.bugs.dist/c/EDqc_hzb0sQ
+      # - https://lists.infradead.org/pipermail/hostap/2022-February/040230.html
+      # - https://bbs.archlinux.org/viewtopic.php?id=273651
       pacman -S --noconfirm --noprogressbar \
         intel-gpu-tools \
         intel-media-driver \
