@@ -563,6 +563,7 @@ pacman -S --noconfirm --noprogressbar \
   fakeroot \
   fd \
   fdupes \
+  fish \
   fzf \
   geoipupdate \
   git \
@@ -609,6 +610,7 @@ pacman -S --noconfirm --noprogressbar \
   perl \
   pigz \
   pixz \
+  pkgfile \
   plocate \
   procs \
   python3 \
@@ -663,7 +665,7 @@ fi
 
 case "$board_vendor" in
 
-  "TUXEDO" | "Micro-Star International Co., Ltd.")
+  "TUXEDO" | "Micro-Star International Co., Ltd." | "SAMSUNG ELECTRONICS CO., LTD.")
 
     # Common hardware packages
     pacman -S --noconfirm --noprogressbar \
@@ -731,6 +733,32 @@ case "$board_vendor" in
         vulkan-icd-loader \
         vulkan-mesa-layers \
         vulkan-radeon \
+        vulkan-tools
+
+    fi
+
+    if [[ "$board_name" = "SAMSUNG_NP1234567890" ]]; then
+
+      # Samsung Series 9 NP900X4C Laptop
+      pacman -S --noconfirm --noprogressbar \
+        intel-gpu-tools \
+        intel-media-driver \
+        intel-ucode \
+        lib32-vulkan-intel \
+        libva-intel-driver \
+        libva-mesa-driver \
+        libva-utils \
+        libvdpau-va-gl \
+        mesa \
+        mesa-utils \
+        mesa-vdpau  \
+        nvtop \
+        powertop \
+        tlp \
+        vdpauinfo \
+        vulkan-icd-loader \
+        vulkan-intel \
+        vulkan-mesa-layers \
         vulkan-tools
 
     fi
@@ -806,6 +834,7 @@ pacman -S --noconfirm --noprogressbar \
   kcharselect \
   kclock \
   kcolorchooser \
+  kde-gtk-config \
   kde-inotify-survey \
   kdebugsettings \
   kdegraphics-thumbnailers \
@@ -991,6 +1020,10 @@ pacman -S --noconfirm --noprogressbar \
 pacman -S --noconfirm --noprogressbar \
   libappindicator-gtk3 \
   perl-file-mimeinfo
+
+# Offline Arch Wiki
+pacman -S --noconfirm --noprogressbar \
+  arch-wiki-docs
 
 echo
 
@@ -1481,7 +1514,7 @@ echo -e "Passw0rd\nPassw0rd" | passwd
 
 # Set up my user with a temporary password
 useradd -m jc
-usermod -a -G docker,libvirt,wheel jc
+usermod -a -G docker,libvirt,wheel -s /usr/bin/fish jc
 echo -e "Passw0rd\nPassw0rd" | passwd jc
 
 echo
