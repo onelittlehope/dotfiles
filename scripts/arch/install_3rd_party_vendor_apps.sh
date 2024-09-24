@@ -109,7 +109,7 @@ install_beyond_compare () {
   chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/beyond_compare"
   chmod -R og-rwx "${HOME}/.local/lib/beyond_compare"
   echo "INFO: To install the file manager extension some commands need to run as root."
-  sudo tmp_dir="${tmp_dir}" -s << 'BCOMPARE_EXT_EOF'
+  SHELL=/usr/bin/bash sudo tmp_dir="${tmp_dir}" -s << 'BCOMPARE_EXT_EOF'
   [ -e "/usr/lib64/qt6/plugins/kf6/kfileitemaction/bcompare_ext_kde6.amd64.so" ] && rm "/usr/lib64/qt6/plugins/kf6/kfileitemaction/bcompare_ext_kde6.amd64.so"
   cp "${tmp_dir}/beyond_compare/ext/bcompare_ext_kde6.amd64.so" "/usr/lib64/qt6/plugins/kf6/kfileitemaction/bcompare_ext_kde6.amd64.so"
   chown root:root "/usr/lib64/qt6/plugins/kf6/kfileitemaction/bcompare_ext_kde6.amd64.so"
