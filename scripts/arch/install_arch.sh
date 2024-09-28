@@ -564,6 +564,7 @@ pacman -S --noconfirm --noprogressbar \
   fd \
   fdupes \
   fish \
+  fisher \
   fzf \
   geoipupdate \
   git \
@@ -816,11 +817,8 @@ pacman -S --noconfirm --noprogressbar \
   noto-fonts-cjk \
   noto-fonts-emoji \
   noto-fonts-extra \
-  otf-commit-mono-nerd \
   otf-latin-modern \
   otf-latinmodern-math \
-  otf-monaspace-nerd \
-  ttf-cascadia-mono-nerd \
   ttf-hack-nerd \
   ttf-iosevkaterm-nerd \
   ttf-jetbrains-mono-nerd \
