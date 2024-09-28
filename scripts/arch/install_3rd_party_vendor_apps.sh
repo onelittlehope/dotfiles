@@ -565,6 +565,35 @@ install_sublimetext () {
 
 
 #
+# Install Tide Prompt for Fish Shell
+#
+install_tide () {
+  /usr/bin/fish -c "
+    if test -f '/home/jc/.config/fish/functions/tide.fish'
+
+      # Update Tide prompt for Fish Shell
+      fisher update ilancosman/tide@v6
+
+    else
+
+      # Install Tide prompt for Fish Shell
+      fisher install ilancosman/tide@v6
+
+      # Configure tide
+      tide configure --auto --style=Rainbow --prompt_colors='True color' \
+        --show_time='24-hour format' --rainbow_prompt_separators=Round \
+        --powerline_prompt_heads=Round --powerline_prompt_tails=Round \
+        --powerline_prompt_style='Two lines, character' \
+        --prompt_connection=Solid --powerline_right_prompt_frame=No \
+        --prompt_connection_andor_frame_color=Darkest --prompt_spacing=Compact \
+        --icons='Many icons' --transient=Yes
+
+    end
+  "
+}
+
+
+#
 # Install Visual Studio Code
 #
 install_vscode () {
@@ -672,6 +701,7 @@ CHOICES=$(whiptail \
           "SLACK" "Slack (Latest version)" ON \
           "SMARTGIT" "Syntevo SmartGit (v23.1.4)" ON \
           "SUBLIME_TEXT" "Sublime Text (Latest version)" ON \
+          "TIDE" "Tide prompt for Fish Shell (Latest version)" ON \
           "VSCODE" "Microsoft Visual Studio Code (Latest version)" ON \
           "WEBSTORM" "JetBrains WebStorm (Latest version)" OFF \
           "YAMLPATH" "YAMLPath (Latest version)" ON \
@@ -769,6 +799,10 @@ else
     "SUBLIME_TEXT")
       echo "Installing Sublime Text"
       install_sublimetext
+      ;;
+    "TIDE")
+      echo "Installing Tide prompt for Fish Shell"
+      install_tide
       ;;
     "VSCODE")
       echo "Installing Visual Studio Code"
