@@ -223,7 +223,8 @@ pacstrap -K /mnt \
   mkinitcpio \
   nano \
   networkmanager \
-  wireless-regdb
+  wireless-regdb \
+  xfsprogs
 
 echo
 
@@ -565,6 +566,7 @@ pacman -S --noconfirm --noprogressbar \
   fdupes \
   fish \
   fisher \
+  fortune-mod \
   fzf \
   geoipupdate \
   git \
@@ -694,13 +696,11 @@ case "$board_vendor" in
         lib32-nvidia-utils \
         lib32-vulkan-intel \
         libva-intel-driver \
-        libva-mesa-driver \
         libva-nvidia-driver \
         libva-utils \
         libvdpau-va-gl \
         mesa \
         mesa-utils \
-        mesa-vdpau  \
         nvidia-open \
         nvidia-prime \
         nvidia-settings \
@@ -1031,6 +1031,23 @@ pacman -S --noconfirm --noprogressbar \
 # Offline Arch Wiki
 pacman -S --noconfirm --noprogressbar \
   arch-wiki-docs
+
+# RSSGuard
+pacman -S --noconfirm --noprogressbar \
+  nodejs \
+  npm \
+  rssguard
+
+# Android development
+pacman -S --noconfirm --noprogressbar \
+  gradle \
+  gradle-doc \
+  groovy-docs \
+  jdk8-openjdk
+
+# Zed text editor
+pacman -S --noconfirm --noprogressbar \
+  zed
 
 echo
 
