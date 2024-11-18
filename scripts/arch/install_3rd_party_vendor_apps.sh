@@ -25,15 +25,15 @@ install_android_studio () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/2024.1.2.12/android-studio-2024.1.2.12-linux.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/2024.2.1.11/android-studio-2024.2.1.11-linux.tar.gz"
   if [ -d "${HOME}/.local/lib/android-studio" ]; then
     rm -rf "${HOME}/.local/lib/android-studio"
   fi
   tar xzf "${tmp_file}" -C "${HOME}/.local/lib"
   [ -e "${HOME}/.local/share/applications/android-studio.desktop" ] && rm "${HOME}/.local/share/applications/android-studio.desktop"
-  echo -e "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=Android Studio\nType=Application\nExec=${HOME}/.local/lib/android-studio/bin/studio.sh %f\nIcon=${HOME}/.local/lib/android-studio/bin/studio.png\nComment=The official Android IDE\nCategories=Development;IDE;Programming\nTerminal=false\nStartupNotify=true\nStartupWMClass=jetbrains-studio\nMimeType=application/x-extension-iml;" > "${HOME}/.local/lib/android-studio/bin/android-studio.desktop"
+  echo -e "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=Android Studio\nType=Application\nExec=${HOME}/.local/lib/android-studio/bin/studio %f\nIcon=${HOME}/.local/lib/android-studio/bin/studio.png\nComment=The official Android IDE\nCategories=Development;IDE;Programming\nTerminal=false\nStartupNotify=true\nStartupWMClass=jetbrains-studio\nMimeType=application/x-extension-iml;" > "${HOME}/.local/lib/android-studio/bin/android-studio.desktop"
   ln -sf "${HOME}/.local/lib/android-studio/bin/android-studio.desktop" "${HOME}/.local/share/applications/android-studio.desktop"
-  ln -sf "${HOME}/.local/lib/android-studio/bin/studio.sh" "${HOME}/.local/bin/studio"
+  ln -sf "${HOME}/.local/lib/android-studio/bin/studio" "${HOME}/.local/bin/studio"
   chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/android-studio"
   chmod -R og-rwx "${HOME}/.local/lib/android-studio"
   rm "${tmp_file}"
@@ -414,6 +414,41 @@ install_jetbrains_ide () {
 
 
 #
+# KeyStore Explorer - GUI replacement for the Java command-line utilities
+#                     keytool and jarsigner
+# https://github.com/kaikramer/keystore-explorer
+#
+install_keystore_explorer () {
+  mkdir -p "${HOME}/.local/bin"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
+  chmod og-rwx "${HOME}/.local/bin"
+  tmp_file="$(mktemp)"
+  tmp_dir="$(mktemp --directory)"
+  latest_ver=$(curl -sL "https://api.github.com/repos/kaikramer/keystore-explorer/releases/latest" \
+    | grep '"tag_name":' \
+    | sed -E 's/.*"([^"]+)".*/\1/')
+  file_ver=$(echo "${latest_ver}" \
+    | sed -E 's/^v//' \
+    | sed -E 's/[\.]//g')
+  curl -sSL -o "${tmp_file}" "https://github.com/kaikramer/keystore-explorer/releases/download/${latest_ver}/kse-${file_ver}.zip"
+  unzip -qq "${tmp_file}" -d "${tmp_dir}"
+  if [ -d "${HOME}/.local/lib/kse" ]; then
+    rm -rf "${HOME}/.local/lib/kse"
+  fi
+  mkdir -p "${HOME}/.local/lib/kse"
+  mv "${tmp_dir}/kse-${file_ver}/"* "${HOME}/.local/lib/kse"
+  chmod 0700 "${HOME}/.local/lib/kse/kse.sh"
+  [ -e "${HOME}/.local/bin/kse" ] && rm "${HOME}/.local/bin/kse"
+  ln -s "${HOME}/.local/lib/kse/kse.sh" "${HOME}/.local/bin/kse"
+  echo -e "[Desktop Entry]\nName=KeyStore Explorer\nGenericName=Multipurpose keystore and certificate tool\nComment=User friendly GUI application for creating, managing and examining keystores, keys, certificates, certificate requests, certificate revocation lists and more.\nExec=${HOME}/.local/lib/kse/kse.sh %f\nTryExec=${HOME}/.local/lib/kse/kse.sh\nTerminal=false\nType=Application\nIcon=${HOME}/.local/lib/kse/icons/kse_512.png\nCategories=Utility;Security;System;Java;\nMimeType=application/x-pkcs12;application/x-java-keystore;application/x-java-jce-keystore;application/pkcs10;application/pkix-pkipath;application/pkix-cert;application/pkix-crl;application/x-x509-ca-cert;application/x-pkcs7-certificates;" > "${HOME}/.local/lib/kse/kse.desktop"
+  ln -sf "${HOME}/.local/lib/kse/kse.desktop" "${HOME}/.local/share/applications/kse.desktop"
+  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/kse" "${HOME}/.local/bin/kse" "${HOME}/.local/share/applications/kse.desktop"
+  chmod -R og-rwx "${HOME}/.local/lib/kse"
+  rm -rf "${tmp_file}" "${tmp_dir}"
+}
+
+
+#
 # kubeswitch - Kubernetes context switcher
 # https://github.com/danielfoehrKn/kubeswitch
 #
@@ -511,7 +546,7 @@ install_smartgit () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://www.syntevo.com/downloads/smartgit/smartgit-linux-23_1_4.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://downloads.syntevo.com/downloads/smartgit/smartgit-linux-24_1_0.tar.gz"
   if [ -d "${HOME}/.local/lib/smartgit" ]; then
     rm -rf "${HOME}/.local/lib/smartgit"
   fi
@@ -636,7 +671,7 @@ install_vscode () {
     -e "s#Icon=vscode#Icon=${HOME}/.local/lib/vscode/pixmaps/vscode.png#g" \
     "${HOME}/.local/lib/vscode/applications/code-url-handler.desktop" \
     "${HOME}/.local/lib/vscode/applications/code.desktop"
-  ln -sf "${HOME}/.local/lib/vscode/code" "${HOME}/.local/bin/code"
+  ln -sf "${HOME}/.local/lib/vscode/bin/code" "${HOME}/.local/bin/code"
   ln -sf "${HOME}/.local/lib/vscode/applications/code.desktop" "${HOME}/.local/share/applications/code.desktop"
   ln -sf "${HOME}/.local/lib/vscode/applications/code-url-handler.desktop" "${HOME}/.local/share/applications/code-url-handler.desktop"
   chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/vscode"
@@ -670,6 +705,33 @@ install_yamlpath () {
 }
 
 
+#
+# Zettlr - Markdown editor
+# https://github.com/Zettlr/Zettlr
+#
+install_zettlr () {
+  mkdir -p "${HOME}/.local/bin"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
+  chmod og-rwx "${HOME}/.local/bin"
+  latest_ver=$(curl -sL "https://api.github.com/repos/Zettlr/Zettlr/releases/latest" \
+    | grep '"tag_name":' \
+    | sed -E 's/.*"v([^"]+)".*/\1/')
+  if [ -d "${HOME}/.local/lib/zettlr" ]; then
+    rm -rf "${HOME}/.local/lib/zettlr"
+  fi
+  mkdir -p "${HOME}/.local/lib/zettlr"
+  curl -sSL --output-dir "${HOME}/.local/lib/zettlr" --output "Zettlr-${latest_ver}-x86_64.AppImage" "https://github.com/Zettlr/Zettlr/releases/download/v${latest_ver}/Zettlr-${latest_ver}-x86_64.AppImage"
+  curl -sSL --output-dir "${HOME}/.local/lib/zettlr" --output "zettlr.png" "https://raw.githubusercontent.com/Zettlr/Zettlr/develop/resources/icons/png/512x512.png"
+  chmod 0700 "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage"
+  echo -e "[Desktop Entry]\nName=Zettlr\nComment=Your one-stop publication workbench.\nGenericName=Markdown Editor\nExec=${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage %U\nIcon=${HOME}/.local/lib/zettlr/zettlr.png\nType=Application\nStartupNotify=true\nCategories=Office;Education;Science;\nMimeType=text/markdown;application/x-tex;application/json;application/yaml;" > "${HOME}/.local/lib/zettlr/zettlr.desktop"
+  [ -e "${HOME}/.local/bin/zettlr" ] && rm "${HOME}/.local/bin/zettlr"
+  ln -s "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage" "${HOME}/.local/bin/zettlr"
+  ln -sf "${HOME}/.local/lib/zettlr/zettlr.desktop" "${HOME}/.local/share/applications/zettlr.desktop"
+  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/zettlr" "${HOME}/.local/bin/zettlr" "${HOME}/.local/share/applications/zettlr.desktop"
+  chmod -R og-rwx "${HOME}/.local/lib/zettlr"
+}
+
+
 #-------------------------------------------------------------------------------
 
 
@@ -679,18 +741,19 @@ CHOICES=$(whiptail \
           --title "3rd Party Software Installation" \
           --checklist "Choose what 3rd party software to install" \
           22 77 15 \
-          "ANDROID_STUDIO" "Google Android Studio (Koala Feature Drop | 2024.1.2)" ON \
+          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.1.11)" ON \
           "AWS_CLI_V2" "AWS CLI V2 (Latest version)" ON \
           "BEYOND_COMPARE" "Scooter Beyond Compare (Latest version)" ON \
           "CLION" "JetBrains CLion (Latest version)" OFF \
           "DATAGRIP" "JetBrains DataGrip (Latest version)" OFF \
           "DIFFOCI" "DiffOCI (Latest version)" ON \
           "DOSAGE" "Dosage (Latest version)" ON \
-          "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" ON \
+          "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" OFF \
           "GOLAND" "JetBrains GoLand (Latest version)" OFF \
           "GOOGLE_CHROME" "Google Chrome (Latest version)" ON \
           "GOOGLE_CLOUD_CLI" "Google Cloud CLI (Latest version)" ON \
           "INTELLIJ_IDEA" "JetBrains IntelliJ IDEA Ultimate Edition (Latest version)" OFF \
+          "KEYSTORE_EXPLORER" "Keystore Explorer (Latest version)" ON \
           "KUBESWITCH" "Kubeswitch (Latest version)" ON \
           "PHPSTORM" "JetBrains PhpStorm (Latest version)" OFF \
           "PYCHARM_PRO" "JetBrains PyCharm Professional (Latest version)" ON \
@@ -699,12 +762,13 @@ CHOICES=$(whiptail \
           "RUSTROVER" "JetBrains RustRover (Latest version)" ON \
           "SHELLCHECK" "ShellCheck (Latest version)" ON \
           "SLACK" "Slack (Latest version)" ON \
-          "SMARTGIT" "Syntevo SmartGit (v23.1.4)" ON \
+          "SMARTGIT" "Syntevo SmartGit (v24.1.0)" ON \
           "SUBLIME_TEXT" "Sublime Text (Latest version)" ON \
           "TIDE" "Tide prompt for Fish Shell (Latest version)" ON \
           "VSCODE" "Microsoft Visual Studio Code (Latest version)" ON \
           "WEBSTORM" "JetBrains WebStorm (Latest version)" OFF \
           "YAMLPATH" "YAMLPath (Latest version)" ON \
+          "ZETTLR" "Zettlr (Latest version)" ON \
           3>&1 1>&2 2>&3)
 
 if [ -z "$CHOICES" ]; then
@@ -760,8 +824,12 @@ else
       echo "Installing IntelliJ IDEA Ultimate Edition"
       install_jetbrains_ide "IIU"
       ;;
+    "KEYSTORE_EXPLORER")
+      echo "Installing Keystore Explorer"
+      install_keystore_explorer
+      ;;
     "KUBESWITCH")
-      echo "Instalaling Kubeswitch"
+      echo "Installing Kubeswitch"
       install_kubeswitch
       ;;
     "PHPSTORM")
@@ -815,6 +883,10 @@ else
     "YAMLPATH")
       echo "Installing YAMLPath"
       install_yamlpath
+      ;;
+    "ZETTLR")
+      echo "Installing Zettlr"
+      install_zettlr
       ;;
     *)
       echo "Unsupported item $CHOICE!" >&2
