@@ -267,6 +267,32 @@ install_google_cloud_cli () {
 
 
 #
+# Heroic - Games launcher
+# https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/
+#
+install_heroic () {
+  mkdir -p "${HOME}/.local/bin"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
+  chmod og-rwx "${HOME}/.local/bin"
+  latest_ver=$(curl -sL "https://api.github.com/repos/Heroic-Games-Launcher/HeroicGamesLauncher/releases/latest" \
+    | grep '"tag_name":' \
+    | sed -E 's/.*"v([^"]+)".*/\1/')
+  if [ -d "${HOME}/.local/lib/heroic" ]; then
+    rm -rf "${HOME}/.local/lib/heroic"
+  fi
+  mkdir -p "${HOME}/.local/lib/heroic"
+  curl -sSL --output-dir "${HOME}/.local/lib/heroic" --output "Heroic-${latest_ver}.AppImage" "https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${latest_ver}/Heroic-${latest_ver}.AppImage"
+  curl -sSL --output-dir "${HOME}/.local/lib/heroic" --output "heroic.png" "https://raw.githubusercontent.com/Heroic-Games-Launcher/HeroicGamesLauncher/main/public/icon.png"
+  chmod 0700 "${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage"
+  echo -e "[Desktop Entry]\nName=Heroic Games Launcher\nComment=Open Source GOG and Epic Games launcher\nExec=${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage %U\nIcon=${HOME}/.local/lib/heroic/heroic.png\nType=Application\nStartupNotify=true\nCategories=Game;\nStartupWMClass=Heroic\nMimeType=x-scheme-handler/heroic;" > "${HOME}/.local/lib/heroic/heroic.desktop"
+  ln -sf "${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage" "${HOME}/.local/bin/heroic"
+  ln -sf "${HOME}/.local/lib/heroic/heroic.desktop" "${HOME}/.local/share/applications/heroic.desktop"
+  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/heroic" "${HOME}/.local/bin/heroic" "${HOME}/.local/share/applications/heroic.desktop"
+  chmod -R og-rwx "${HOME}/.local/lib/heroic"
+}
+
+
+#
 # JetBrains IDEs
 #
 install_jetbrains_ide () {
@@ -468,6 +494,32 @@ install_kubeswitch () {
 
 
 #
+# Obsidian - Markdown editor
+# https://github.com/obsidianmd
+#
+install_obsidian () {
+  mkdir -p "${HOME}/.local/bin"
+  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
+  chmod og-rwx "${HOME}/.local/bin"
+  latest_ver=$(curl -sL "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" \
+    | grep '"tag_name":' \
+    | sed -E 's/.*"v([^"]+)".*/\1/')
+  if [ -d "${HOME}/.local/lib/obsidian" ]; then
+    rm -rf "${HOME}/.local/lib/obsidian"
+  fi
+  mkdir -p "${HOME}/.local/lib/obsidian"
+  curl -sSL --output-dir "${HOME}/.local/lib/obsidian" --output "Obsidian-${latest_ver}.AppImage" "https://github.com/obsidianmd/obsidian-releases/releases/download/v${latest_ver}/Obsidian-${latest_ver}.AppImage"
+  curl -sSL --output-dir "${HOME}/.local/lib/obsidian" --output "obsidian.png" "https://avatars.githubusercontent.com/u/65011256"
+  chmod 0700 "${HOME}/.local/lib/obsidian/Obsidian-${latest_ver}.AppImage"
+  echo -e "[Desktop Entry]\nName=Obsidian\nGenericName=Markdown Editor\nExec=${HOME}/.local/lib/obsidian/Obsidian-${latest_ver}.AppImage %U\nIcon=${HOME}/.local/lib/obsidian/obsidian.png\nType=Application\nStartupNotify=true\nCategories=Office;Education;Science;\nMimeType=text/markdown;" > "${HOME}/.local/lib/obsidian/obsidian.desktop"
+  ln -sf "${HOME}/.local/lib/obsidian/Obsidian-${latest_ver}.AppImage" "${HOME}/.local/bin/obsidian"
+  ln -sf "${HOME}/.local/lib/obsidian/obsidian.desktop" "${HOME}/.local/share/applications/obsidian.desktop"
+  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/obsidian" "${HOME}/.local/bin/obsidian" "${HOME}/.local/share/applications/obsidian.desktop"
+  chmod -R og-rwx "${HOME}/.local/lib/obsidian"
+}
+
+
+#
 # shellcheck - Static analysis tool for shell scripts 
 # https://github.com/koalaman/shellcheck
 #
@@ -546,7 +598,7 @@ install_smartgit () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://downloads.syntevo.com/downloads/smartgit/smartgit-linux-24_1_0.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://downloads.syntevo.com/downloads/smartgit/smartgit-linux-24_1_1.tar.gz"
   if [ -d "${HOME}/.local/lib/smartgit" ]; then
     rm -rf "${HOME}/.local/lib/smartgit"
   fi
@@ -724,8 +776,7 @@ install_zettlr () {
   curl -sSL --output-dir "${HOME}/.local/lib/zettlr" --output "zettlr.png" "https://raw.githubusercontent.com/Zettlr/Zettlr/develop/resources/icons/png/512x512.png"
   chmod 0700 "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage"
   echo -e "[Desktop Entry]\nName=Zettlr\nComment=Your one-stop publication workbench.\nGenericName=Markdown Editor\nExec=${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage %U\nIcon=${HOME}/.local/lib/zettlr/zettlr.png\nType=Application\nStartupNotify=true\nCategories=Office;Education;Science;\nMimeType=text/markdown;application/x-tex;application/json;application/yaml;" > "${HOME}/.local/lib/zettlr/zettlr.desktop"
-  [ -e "${HOME}/.local/bin/zettlr" ] && rm "${HOME}/.local/bin/zettlr"
-  ln -s "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage" "${HOME}/.local/bin/zettlr"
+  ln -sf "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage" "${HOME}/.local/bin/zettlr"
   ln -sf "${HOME}/.local/lib/zettlr/zettlr.desktop" "${HOME}/.local/share/applications/zettlr.desktop"
   chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/zettlr" "${HOME}/.local/bin/zettlr" "${HOME}/.local/share/applications/zettlr.desktop"
   chmod -R og-rwx "${HOME}/.local/lib/zettlr"
@@ -741,34 +792,36 @@ CHOICES=$(whiptail \
           --title "3rd Party Software Installation" \
           --checklist "Choose what 3rd party software to install" \
           22 77 15 \
-          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.1.11)" ON \
           "AWS_CLI_V2" "AWS CLI V2 (Latest version)" ON \
-          "BEYOND_COMPARE" "Scooter Beyond Compare (Latest version)" ON \
-          "CLION" "JetBrains CLion (Latest version)" OFF \
-          "DATAGRIP" "JetBrains DataGrip (Latest version)" OFF \
           "DIFFOCI" "DiffOCI (Latest version)" ON \
           "DOSAGE" "Dosage (Latest version)" ON \
           "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" OFF \
-          "GOLAND" "JetBrains GoLand (Latest version)" OFF \
+          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.1.11)" ON \
           "GOOGLE_CHROME" "Google Chrome (Latest version)" ON \
           "GOOGLE_CLOUD_CLI" "Google Cloud CLI (Latest version)" ON \
+          "HEROIC" "Heroic Games Launcher (Latest version)" ON \
+          "CLION" "JetBrains CLion (Latest version)" OFF \
+          "DATAGRIP" "JetBrains DataGrip (Latest version)" OFF \
+          "GOLAND" "JetBrains GoLand (Latest version)" OFF \
           "INTELLIJ_IDEA" "JetBrains IntelliJ IDEA Ultimate Edition (Latest version)" OFF \
-          "KEYSTORE_EXPLORER" "Keystore Explorer (Latest version)" ON \
-          "KUBESWITCH" "Kubeswitch (Latest version)" ON \
           "PHPSTORM" "JetBrains PhpStorm (Latest version)" OFF \
-          "PYCHARM_PRO" "JetBrains PyCharm Professional (Latest version)" ON \
+          "PYCHARM_PRO" "JetBrains PyCharm Professional (Latest version)" OFF \
           "RIDER" "JetBrains Rider (Latest version)" OFF \
           "RUBYMINE" "JetBrains RubyMine (Latest version)" OFF \
-          "RUSTROVER" "JetBrains RustRover (Latest version)" ON \
+          "RUSTROVER" "JetBrains RustRover (Latest version)" OFF \
+          "WEBSTORM" "JetBrains WebStorm (Latest version)" OFF \
+          "KEYSTORE_EXPLORER" "Keystore Explorer (Latest version)" ON \
+          "KUBESWITCH" "Kubeswitch (Latest version)" ON \
+          "VSCODE" "Microsoft Visual Studio Code (Latest version)" ON \
+          "OBSIDIAN" "Obsidian (Latest version)" ON \
+          "BEYOND_COMPARE" "Scooter Beyond Compare (Latest version)" ON \
           "SHELLCHECK" "ShellCheck (Latest version)" ON \
           "SLACK" "Slack (Latest version)" ON \
-          "SMARTGIT" "Syntevo SmartGit (v24.1.0)" ON \
           "SUBLIME_TEXT" "Sublime Text (Latest version)" ON \
+          "SMARTGIT" "Syntevo SmartGit (v24.1.1)" ON \
           "TIDE" "Tide prompt for Fish Shell (Latest version)" ON \
-          "VSCODE" "Microsoft Visual Studio Code (Latest version)" ON \
-          "WEBSTORM" "JetBrains WebStorm (Latest version)" OFF \
           "YAMLPATH" "YAMLPath (Latest version)" ON \
-          "ZETTLR" "Zettlr (Latest version)" ON \
+          "ZETTLR" "Zettlr (Latest version)" OFF \
           3>&1 1>&2 2>&3)
 
 if [ -z "$CHOICES" ]; then
@@ -820,6 +873,10 @@ else
       echo "Installing Google Cloud CLI"
       install_google_cloud_cli
       ;;
+    "HEROIC")
+      echo "Installing Heroic Games Launcher"
+      install_heroic
+      ;;
     "INTELLIJ_IDEA")
       echo "Installing IntelliJ IDEA Ultimate Edition"
       install_jetbrains_ide "IIU"
@@ -831,6 +888,10 @@ else
     "KUBESWITCH")
       echo "Installing Kubeswitch"
       install_kubeswitch
+      ;;
+    "OBSIDIAN")
+      echo "Installing Obsidian"
+      install_obsidian
       ;;
     "PHPSTORM")
       echo "Installing PhpStorm"
