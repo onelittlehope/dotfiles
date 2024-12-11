@@ -898,6 +898,11 @@ pacman -S --noconfirm --noprogressbar \
   tesseract-data-hin \
   yakuake
 
+# Flatpak
+pacman -S --noconfirm --noprogressbar \
+  flatpak \
+  flatpak-kcm
+
 # Orthodox file manager
 pacman -S --noconfirm --noprogressbar \
   doublecmd-qt6 \
@@ -916,6 +921,7 @@ pacman -S --noconfirm --noprogressbar \
 pacman -S --noconfirm --noprogressbar \
   beanshell \
   coin-or-mp \
+  gst-libav \
   gst-plugins-bad \
   gst-plugins-good \
   gst-plugins-ugly \
@@ -1049,6 +1055,76 @@ pacman -S --noconfirm --noprogressbar \
 pacman -S --noconfirm --noprogressbar \
   zed
 
+# Wine
+pacman -S --noconfirm --noprogressbar \
+  dosbox \
+  lib32-giflib \
+  lib32-gnutls \
+  lib32-gst-plugins-base-libs \
+  lib32-gtk3 \
+  lib32-libpulse \
+  lib32-libva \
+  lib32-libxcomposite \
+  lib32-libxinerama \
+  lib32-ocl-icd \
+  lib32-sdl2 \
+  lib32-v4l-utils \
+  wine-staging
+
+# Picard (Official MusicBrainz tagger)
+pacman -S --noconfirm --noprogressbar \
+  picard \
+  qt5-multimedia
+
+# Retroarch
+pacman -S --noconfirm --noprogressbar \
+  gamemode \
+  libretro-beetle-pce \
+  libretro-beetle-pce-fast \
+  libretro-beetle-psx \
+  libretro-beetle-psx-hw \
+  libretro-beetle-supergrafx \
+  libretro-blastem \
+  libretro-bsnes \
+  libretro-bsnes-hd \
+  libretro-bsnes2014 \
+  libretro-citra \
+  libretro-core-info \
+  libretro-desmume \
+  libretro-dolphin \
+  libretro-flycast \
+  libretro-gambatte \
+  libretro-genesis-plus-gx \
+  libretro-kronos \
+  libretro-mame \
+  libretro-mame2016 \
+  libretro-melonds \
+  libretro-mesen \
+  libretro-mesen-s \
+  libretro-mgba \
+  libretro-mupen64plus-next \
+  libretro-nestopia \
+  libretro-overlays \
+  libretro-parallel-n64 \
+  libretro-pcsx2 \
+  libretro-picodrive \
+  libretro-play \
+  libretro-ppsspp \
+  libretro-retrodream \
+  libretro-sameboy \
+  libretro-scummvm \
+  libretro-shaders-slang \
+  libretro-snes9x \
+  libretro-yabause \
+  retroarch \
+  retroarch-assets-glui \
+  retroarch-assets-ozone \
+  retroarch-assets-xmb
+
+# Signal
+pacman -S --noconfirm --noprogressbar \
+  signal-desktop
+
 echo
 
 echo "#==============================================================================="
@@ -1122,6 +1198,9 @@ sed -i -e 's/^#firewall_backend = "nftables"/firewall_backend = "iptables"/g' /e
 # setup the symlink manually.
 #virsh net-autostart default
 ln -s /etc/libvirt/qemu/networks/default.xml /etc/libvirt/qemu/networks/autostart/default.xml
+
+# Add the official Flathub repository
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 echo
 
