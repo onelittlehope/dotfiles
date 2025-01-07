@@ -535,6 +535,7 @@ echo "# Install base packages                                                   
 echo "#==============================================================================="
 
 pacman -S --noconfirm --noprogressbar \
+  7zip \
   arch-audit \
   aria2 \
   atop \
@@ -607,7 +608,6 @@ pacman -S --noconfirm --noprogressbar \
   ntfs-3g \
   openbsd-netcat \
   openssh \
-  p7zip \
   pacman-contrib \
   patchutils \
   perl \
@@ -831,6 +831,7 @@ pacman -S --noconfirm --noprogressbar \
   bluedevil \
   dolphin \
   dolphin-plugins \
+  evemu \
   ffmpegthumbs \
   filelight \
   gnuchess \
@@ -1124,6 +1125,16 @@ pacman -S --noconfirm --noprogressbar \
 # Signal
 pacman -S --noconfirm --noprogressbar \
   signal-desktop
+
+# Blender
+pacman -S --noconfirm --noprogressbar \
+  blender \
+  hiprt \
+  rocminfo
+
+# Streamlink
+pacman -S --noconfirm --noprogressbar \
+  streamlink
 
 echo
 
