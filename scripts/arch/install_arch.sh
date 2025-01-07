@@ -1000,7 +1000,6 @@ pacman -S --noconfirm --noprogressbar \
   docker \
   docker-buildx \
   docker-compose \
-  docker-scan \
   helm \
   kubectl \
   kubetui \
