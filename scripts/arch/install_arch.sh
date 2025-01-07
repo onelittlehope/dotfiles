@@ -1052,10 +1052,6 @@ pacman -S --noconfirm --noprogressbar \
   groovy-docs \
   jdk8-openjdk
 
-# Zed text editor
-pacman -S --noconfirm --noprogressbar \
-  zed
-
 # Wine
 pacman -S --noconfirm --noprogressbar \
   dosbox \
@@ -1127,10 +1123,15 @@ pacman -S --noconfirm --noprogressbar \
   signal-desktop
 
 # Blender
-pacman -S --noconfirm --noprogressbar \
-  blender \
-  hiprt \
-  rocminfo
+if [[ "$board_name" = "MEG X570 ACE (MS-7C35)" ]]; then
+  pacman -S --noconfirm --noprogressbar \
+    blender \
+    hiprt \
+    rocminfo
+else
+  pacman -S --noconfirm --noprogressbar \
+    blender
+fi
 
 # Streamlink
 pacman -S --noconfirm --noprogressbar \
