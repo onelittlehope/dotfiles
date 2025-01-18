@@ -25,7 +25,7 @@ install_android_studio () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/2024.2.1.11/android-studio-2024.2.1.11-linux.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/2024.2.2.13/android-studio-2024.2.2.13-linux.tar.gz"
   if [ -d "${HOME}/.local/lib/android-studio" ]; then
     rm -rf "${HOME}/.local/lib/android-studio"
   fi
@@ -796,7 +796,7 @@ CHOICES=$(whiptail \
           "DIFFOCI" "DiffOCI (Latest version)" ON \
           "DOSAGE" "Dosage (Latest version)" ON \
           "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" OFF \
-          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.1.11)" ON \
+          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.2.13)" ON \
           "GOOGLE_CHROME" "Google Chrome (Latest version)" ON \
           "GOOGLE_CLOUD_CLI" "Google Cloud CLI (Latest version)" ON \
           "HEROIC" "Heroic Games Launcher (Latest version)" ON \
