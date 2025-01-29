@@ -1063,7 +1063,7 @@ pacman -S --noconfirm --noprogressbar \
   lib32-libxcomposite \
   lib32-libxinerama \
   lib32-ocl-icd \
-  lib32-sdl2 \
+  lib32-sdl2-compat \
   lib32-v4l-utils \
   wine-staging
 
