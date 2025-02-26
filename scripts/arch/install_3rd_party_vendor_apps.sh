@@ -199,52 +199,6 @@ install_dropbox () {
 
 
 #
-# Install Google Chrome
-#
-install_google_chrome () {
-  mkdir -p "${HOME}/.local/"{bin,lib}
-  mkdir -p "${HOME}/.local/share/applications"
-  chown "$(id -un)":"$(id -gn)" \
-    "${HOME}/.local/"{bin,lib} \
-    "${HOME}/.local/share" \
-    "${HOME}/.local/share/applications"
-  chmod og-rwx \
-    "${HOME}/.local/"{bin,lib} \
-    "${HOME}/.local/share" \
-    "${HOME}/.local/share/applications"
-  tmp_file="$(mktemp)"
-  tmp_dir="$(mktemp --directory)"
-  latest_ver="$(curl -sSf "https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages" \
-    | grep -Pzo '(?m)Package: google-chrome-stable(\n.+)+\n\n' \
-    | awk '/Version/{print $2}' \
-    | sort -Vr \
-    | head -1)"
-  curl -sSL -o "${tmp_file}" "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${latest_ver}_amd64.deb"
-  ar x --output "${tmp_dir}" "${tmp_file}" "data.tar.xz"
-  tar -xJf "${tmp_dir}/data.tar.xz" -C "${tmp_dir}"
-  if [ -d "${HOME}/.local/lib/google_chrome" ]; then
-    rm -rf "${HOME}/.local/lib/google_chrome"
-  fi
-  mv "${tmp_dir}/opt/google/chrome" "${HOME}/.local/lib/google_chrome"
-  mv "${tmp_dir}/usr/share/"* "${HOME}/.local/lib/google_chrome/"
-  sed -i \
-    -e "/Exec=/i\StartupWMClass=Google-chrome" \
-    -e "s#/opt/google/chrome/#${HOME}/.local/lib/google_chrome/#g" \
-    -e "s#Exec=/usr/bin/google-chrome-stable#Exec=${HOME}/.local/lib/google_chrome/google-chrome#g" \
-    -e "s#Icon=google-chrome#Icon=${HOME}/.local/lib/google_chrome/product_logo_256.png#g" \
-    "${HOME}/.local/lib/google_chrome/applications/google-chrome.desktop" \
-    "${HOME}/.local/lib/google_chrome/default-app-block" \
-    "${HOME}/.local/lib/google_chrome/gnome-control-center/default-apps/google-chrome.xml" \
-    "${HOME}/.local/lib/google_chrome/menu/google-chrome.menu"
-  ln -sf "${HOME}/.local/lib/google_chrome/google-chrome" "${HOME}/.local/bin/google-chrome"
-  ln -sf "${HOME}/.local/lib/google_chrome/applications/google-chrome.desktop" "${HOME}/.local/share/applications/google-chrome.desktop"
-  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/google_chrome"
-  chmod -R og-rwx "${HOME}/.local/lib/google_chrome"
-  rm -rf "${tmp_file}" "${tmp_dir}"
-}
-
-
-#
 # gcloud CLI - Google Cloud Command Line Interface
 # https://cloud.google.com/sdk/docs/install
 #
@@ -757,32 +711,6 @@ install_yamlpath () {
 }
 
 
-#
-# Zettlr - Markdown editor
-# https://github.com/Zettlr/Zettlr
-#
-install_zettlr () {
-  mkdir -p "${HOME}/.local/bin"
-  chown "$(id -un)":"$(id -gn)" "${HOME}/.local/bin"
-  chmod og-rwx "${HOME}/.local/bin"
-  latest_ver=$(curl -sL "https://api.github.com/repos/Zettlr/Zettlr/releases/latest" \
-    | grep '"tag_name":' \
-    | sed -E 's/.*"v([^"]+)".*/\1/')
-  if [ -d "${HOME}/.local/lib/zettlr" ]; then
-    rm -rf "${HOME}/.local/lib/zettlr"
-  fi
-  mkdir -p "${HOME}/.local/lib/zettlr"
-  curl -sSL --output-dir "${HOME}/.local/lib/zettlr" --output "Zettlr-${latest_ver}-x86_64.AppImage" "https://github.com/Zettlr/Zettlr/releases/download/v${latest_ver}/Zettlr-${latest_ver}-x86_64.AppImage"
-  curl -sSL --output-dir "${HOME}/.local/lib/zettlr" --output "zettlr.png" "https://raw.githubusercontent.com/Zettlr/Zettlr/develop/resources/icons/png/512x512.png"
-  chmod 0700 "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage"
-  echo -e "[Desktop Entry]\nName=Zettlr\nComment=Your one-stop publication workbench.\nGenericName=Markdown Editor\nExec=${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage %U\nIcon=${HOME}/.local/lib/zettlr/zettlr.png\nType=Application\nStartupNotify=true\nCategories=Office;Education;Science;\nMimeType=text/markdown;application/x-tex;application/json;application/yaml;" > "${HOME}/.local/lib/zettlr/zettlr.desktop"
-  ln -sf "${HOME}/.local/lib/zettlr/Zettlr-${latest_ver}-x86_64.AppImage" "${HOME}/.local/bin/zettlr"
-  ln -sf "${HOME}/.local/lib/zettlr/zettlr.desktop" "${HOME}/.local/share/applications/zettlr.desktop"
-  chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/zettlr" "${HOME}/.local/bin/zettlr" "${HOME}/.local/share/applications/zettlr.desktop"
-  chmod -R og-rwx "${HOME}/.local/lib/zettlr"
-}
-
-
 #-------------------------------------------------------------------------------
 
 
@@ -797,7 +725,6 @@ CHOICES=$(whiptail \
           "DOSAGE" "Dosage (Latest version)" ON \
           "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" OFF \
           "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.2.13)" ON \
-          "GOOGLE_CHROME" "Google Chrome (Latest version)" ON \
           "GOOGLE_CLOUD_CLI" "Google Cloud CLI (Latest version)" ON \
           "HEROIC" "Heroic Games Launcher (Latest version)" ON \
           "CLION" "JetBrains CLion (Latest version)" OFF \
@@ -821,7 +748,6 @@ CHOICES=$(whiptail \
           "SMARTGIT" "Syntevo SmartGit (v24.1.1)" ON \
           "TIDE" "Tide prompt for Fish Shell (Latest version)" ON \
           "YAMLPATH" "YAMLPath (Latest version)" ON \
-          "ZETTLR" "Zettlr (Latest version)" OFF \
           3>&1 1>&2 2>&3)
 
 if [ -z "$CHOICES" ]; then
@@ -864,10 +790,6 @@ else
     "GOLAND")
       echo "Installing GoLand"
       install_jetbrains_ide "GO"
-      ;;
-    "GOOGLE_CHROME")
-      echo "Installing Google Chrome"
-      install_google_chrome
       ;;
     "GOOGLE_CLOUD_CLI")
       echo "Installing Google Cloud CLI"
@@ -944,10 +866,6 @@ else
     "YAMLPATH")
       echo "Installing YAMLPath"
       install_yamlpath
-      ;;
-    "ZETTLR")
-      echo "Installing Zettlr"
-      install_zettlr
       ;;
     *)
       echo "Unsupported item $CHOICE!" >&2
