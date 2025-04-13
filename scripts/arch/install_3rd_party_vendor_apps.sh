@@ -9,6 +9,9 @@ if [[ $(id -u) -eq 0 ]]; then
   exit 1
 fi
 
+ANDROID_STUDIO_VERSION="2024.3.1.14"
+SMARTGIT_VERSION="24_1_3"
+
 
 #
 # Install Android Studio
@@ -25,7 +28,7 @@ install_android_studio () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/2024.2.2.13/android-studio-2024.2.2.13-linux.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-${ANDROID_STUDIO_VERSION}-linux.tar.gz"
   if [ -d "${HOME}/.local/lib/android-studio" ]; then
     rm -rf "${HOME}/.local/lib/android-studio"
   fi
@@ -182,7 +185,7 @@ install_dropbox () {
     "${HOME}/.local/share/applications" \
     "${HOME}/.config/systemd/user"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://clientupdates.dropboxstatic.com/dbx-releng/client/dropbox-lnx.x86_64-207.4.5821.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://clientupdates.dropboxstatic.com/dbx-releng/client/dropbox-lnx.x86_64-221.4.5365.tar.gz"
   if [ -d "${HOME}/.local/lib/dropbox" ]; then
     rm -rf "${HOME}/.local/lib/dropbox"
   fi
@@ -235,11 +238,11 @@ install_heroic () {
     rm -rf "${HOME}/.local/lib/heroic"
   fi
   mkdir -p "${HOME}/.local/lib/heroic"
-  curl -sSL --output-dir "${HOME}/.local/lib/heroic" --output "Heroic-${latest_ver}.AppImage" "https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${latest_ver}/Heroic-${latest_ver}.AppImage"
+  curl -sSL --output-dir "${HOME}/.local/lib/heroic" --output "Heroic-${latest_ver}-linux-x86_64.AppImage" "https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${latest_ver}/Heroic-${latest_ver}-linux-x86_64.AppImage"
   curl -sSL --output-dir "${HOME}/.local/lib/heroic" --output "heroic.png" "https://raw.githubusercontent.com/Heroic-Games-Launcher/HeroicGamesLauncher/main/public/icon.png"
-  chmod 0700 "${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage"
-  echo -e "[Desktop Entry]\nName=Heroic Games Launcher\nComment=Open Source GOG and Epic Games launcher\nExec=${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage %U\nIcon=${HOME}/.local/lib/heroic/heroic.png\nType=Application\nStartupNotify=true\nCategories=Game;\nStartupWMClass=Heroic\nMimeType=x-scheme-handler/heroic;" > "${HOME}/.local/lib/heroic/heroic.desktop"
-  ln -sf "${HOME}/.local/lib/heroic/Heroic-${latest_ver}.AppImage" "${HOME}/.local/bin/heroic"
+  chmod 0700 "${HOME}/.local/lib/heroic/Heroic-${latest_ver}-linux-x86_64.AppImage"
+  echo -e "[Desktop Entry]\nName=Heroic Games Launcher\nComment=Open Source GOG and Epic Games launcher\nExec=${HOME}/.local/lib/heroic/Heroic-${latest_ver}-linux-x86_64.AppImage %U\nIcon=${HOME}/.local/lib/heroic/heroic.png\nType=Application\nStartupNotify=true\nCategories=Game;\nStartupWMClass=Heroic\nMimeType=x-scheme-handler/heroic;" > "${HOME}/.local/lib/heroic/heroic.desktop"
+  ln -sf "${HOME}/.local/lib/heroic/Heroic-${latest_ver}-linux-x86_64.AppImage" "${HOME}/.local/bin/heroic"
   ln -sf "${HOME}/.local/lib/heroic/heroic.desktop" "${HOME}/.local/share/applications/heroic.desktop"
   chown -R "$(id -un)":"$(id -gn)" "${HOME}/.local/lib/heroic" "${HOME}/.local/bin/heroic" "${HOME}/.local/share/applications/heroic.desktop"
   chmod -R og-rwx "${HOME}/.local/lib/heroic"
@@ -552,7 +555,7 @@ install_smartgit () {
     "${HOME}/.local/share" \
     "${HOME}/.local/share/applications"
   tmp_file="$(mktemp)"
-  curl -sSL -o "${tmp_file}" "https://downloads.syntevo.com/downloads/smartgit/smartgit-linux-24_1_1.tar.gz"
+  curl -sSL -o "${tmp_file}" "https://downloads.syntevo.com/downloads/smartgit/smartgit-linux-${SMARTGIT_VERSION}.tar.gz"
   if [ -d "${HOME}/.local/lib/smartgit" ]; then
     rm -rf "${HOME}/.local/lib/smartgit"
   fi
@@ -723,8 +726,8 @@ CHOICES=$(whiptail \
           "AWS_CLI_V2" "AWS CLI V2 (Latest version)" ON \
           "DIFFOCI" "DiffOCI (Latest version)" ON \
           "DOSAGE" "Dosage (Latest version)" ON \
-          "DROPBOX" "Dropbox (v207.4.5821 - it auto updates itself)" OFF \
-          "ANDROID_STUDIO" "Google Android Studio (Ladybug | 2024.2.2.13)" ON \
+          "DROPBOX" "Dropbox (v221.4.5365 - it auto updates itself)" OFF \
+          "ANDROID_STUDIO" "Google Android Studio (v${ANDROID_STUDIO_VERSION})" ON \
           "GOOGLE_CLOUD_CLI" "Google Cloud CLI (Latest version)" ON \
           "HEROIC" "Heroic Games Launcher (Latest version)" ON \
           "CLION" "JetBrains CLion (Latest version)" OFF \
@@ -745,7 +748,7 @@ CHOICES=$(whiptail \
           "SHELLCHECK" "ShellCheck (Latest version)" ON \
           "SLACK" "Slack (Latest version)" ON \
           "SUBLIME_TEXT" "Sublime Text (Latest version)" ON \
-          "SMARTGIT" "Syntevo SmartGit (v24.1.1)" ON \
+          "SMARTGIT" "Syntevo SmartGit (v${SMARTGIT_VERSION})" ON \
           "TIDE" "Tide prompt for Fish Shell (Latest version)" ON \
           "YAMLPATH" "YAMLPath (Latest version)" ON \
           3>&1 1>&2 2>&3)
